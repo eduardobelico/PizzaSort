@@ -9,18 +9,17 @@ import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
+    private val dao = ProdutosDao()
+    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscaTodos())
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
 
-    private val dao = ProdutosDao()
-    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscaTodos())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-        setContentView(binding.root)
 
     }
     override fun onResume() {
