@@ -11,7 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/produto_item_imagem"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,6 +22,7 @@
         android:id="@+id/produto_item_descricao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/produto_item_nome"
         app:layout_constraintStart_toStartOf="@+id/produto_item_nome"
@@ -45,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/produto_item_nome"
-        app:srcCompat="@android:color/holo_blue_bright"
+        app:srcCompat="@drawable/calabresa"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityListaProdutosBinding
-import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+import com.example.orgs.ui.recyclerview.adapter.ListaJorgeProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
     private val dao = ProdutosDao()
-    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscaTodos())
+    private val adapter = ListaJorgeProdutosAdapter(context = this, produtos = dao.buscaTodos())
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
