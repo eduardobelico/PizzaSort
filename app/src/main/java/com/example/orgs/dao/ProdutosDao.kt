@@ -17,7 +17,7 @@ class ProdutosDao {
         private val produtos = mutableListOf(
         Produto(nome = "Pizza Calabresa",
         descricao = "queijo mussarela, tomate, cebola e calabresa",
-        valor = BigDecimal("19.83")
+        valor = BigDecimal("29.90")
         )
         )
     }
