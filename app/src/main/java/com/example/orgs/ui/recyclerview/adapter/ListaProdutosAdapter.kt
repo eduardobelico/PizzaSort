@@ -24,7 +24,7 @@ class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoVi
 //3 - Crio a variável que vai funcionar como a mutableList
     private val produtoList = mutableListOf<Produto>()
 
-//5 - Criando o inflater no onCreate! IMPORTANTE! No parâmetro do from só trago o context pelo parent
+//5 - Criando o inflater no onCreate! No parâmetro do from só trago o context pelo parent
 //6 - Crio a variável binding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
         val inflater = LayoutInflater.from(parent.context)

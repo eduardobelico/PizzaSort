@@ -5,12 +5,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityListaProdutosBinding
-import com.example.orgs.ui.recyclerview.adapter.ListaJorgeProdutosAdapter
+import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+
 
 class ListaProdutosActivity : AppCompatActivity() {
 
     private val dao = ProdutosDao()
-    private val adapter = ListaJorgeProdutosAdapter(context = this, produtos = dao.buscaTodos())
+    private val adapter = ListaProdutosAdapter()
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
@@ -24,7 +25,7 @@ class ListaProdutosActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        adapter.atualiza(dao.buscaTodos())
+        adapter.setData(dao.buscaTodos())
     }
 
     private fun configuraRecyclerView() {
