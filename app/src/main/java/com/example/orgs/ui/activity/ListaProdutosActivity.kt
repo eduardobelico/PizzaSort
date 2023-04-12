@@ -21,8 +21,8 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-
     }
+
     override fun onResume() {
         super.onResume()
         adapter.setData(dao.buscaTodos())

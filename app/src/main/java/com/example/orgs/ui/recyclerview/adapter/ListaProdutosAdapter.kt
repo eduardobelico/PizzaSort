@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orgs.databinding.ProdutoItemBinding
+import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.model.Produto
 
 //1 - Primeiro crio o meu adapter - é o adapter que dá acesso aos dados. É ele que cria objetos ViewHolder conforme necessário e também define os dados para essas visualizações.
@@ -16,7 +17,7 @@ class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoVi
             with(binding) {
                 produtoItemNome.text = produto.nome
                 produtoItemDescricao.text = produto.descricao
-                produtoItemValor.text = produto.valor.toPlainString()
+                produtoItemValor.text = produto.valor.formatToBrazilianCurrency()
             }
         }
     }
