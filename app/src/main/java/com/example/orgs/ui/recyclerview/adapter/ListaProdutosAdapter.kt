@@ -3,6 +3,7 @@ package com.example.orgs.ui.recyclerview.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.orgs.databinding.ProdutoItemBinding
 import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.model.Produto
@@ -18,6 +19,7 @@ class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoVi
                 produtoItemNome.text = produto.nome
                 produtoItemDescricao.text = produto.descricao
                 produtoItemValor.text = produto.valor.formatToBrazilianCurrency()
+                imageView.load(produto.imagem)
             }
         }
     }
