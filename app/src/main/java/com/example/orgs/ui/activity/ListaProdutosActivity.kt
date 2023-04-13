@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
 import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityListaProdutosBinding
+import com.example.orgs.databinding.FormularioImagemBinding
+import com.example.orgs.ui.dialog.FormularioImagemDialog
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 
