@@ -9,17 +9,30 @@ import com.example.orgs.extensions.tentaCarregarImagem
 import com.example.orgs.model.Produto
 
 //1 - Primeiro crio o meu adapter - é o adapter que dá acesso aos dados. É ele que cria objetos ViewHolder conforme necessário e também define os dados para essas visualizações.
-class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder>() {
+class ListaProdutosAdapter(
+    var clicarNoProduto: (produto: Produto) -> Unit = {}
+) : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder>() {
 
     //2 - Imediatamente depois crio o ViewHolder!! Apenas depois de criado, adiciono as funções do onCreate, onBindView e getItemCount! É o viewHolder que dá funcionalidade aos itens da lista. Ele segura as informações da View.
     inner class ProdutoViewHolder(private val binding: ProdutoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindView(produto: Produto) {
+            this.produto = produto
             with(binding) {
                 produtoItemNome.text = produto.nome
                 produtoItemDescricao.text = produto.descricao
                 produtoItemValor.text = produto.valor.formatToBrazilianCurrency()
                 imageView.tentaCarregarImagem(produto.imagem)
+            }
+        }
+
+        private lateinit var produto: Produto
+
+        init {
+            itemView.setOnClickListener {
+                if (::produto.isInitialized){
+                    clicarNoProduto(produto)
+                }
             }
         }
     }
@@ -48,6 +61,5 @@ class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoVi
         produtoList.addAll(novaProdutoList)
         notifyItemInserted(novaProdutoList.size)
     }
-
 
 }

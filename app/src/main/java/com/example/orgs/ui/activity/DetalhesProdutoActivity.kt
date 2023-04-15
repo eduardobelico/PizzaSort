@@ -1,7 +1,6 @@
 package com.example.orgs.ui.activity
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.databinding.ActivityDetalhesProdutoBinding
 
@@ -11,9 +10,13 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(binding.root)
+    }
+
+    private fun tentaCarregarProduto() {
+        intent.getParcelableExtra()
     }
 
     override fun onResume() {

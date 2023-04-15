@@ -21,6 +21,7 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+
     }
 
     override fun onResume() {
@@ -31,6 +32,8 @@ class ListaProdutosActivity : AppCompatActivity() {
     private fun configuraRecyclerView() {
         val recyclerView = binding.activityListaProdutosRecyclerView
         recyclerView.adapter = adapter
+        vaiParaDetalhesProduto()
+
     }
 
     private fun configuraFab() {
@@ -44,6 +47,18 @@ class ListaProdutosActivity : AppCompatActivity() {
         val intent = Intent(this, FormularioProdutoActivity::class.java)
         startActivity(intent)
     }
+
+    private fun vaiParaDetalhesProduto() {
+        adapter.clicarNoProduto = {
+            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+                putExtra(PRODUTO_CHAVE, it)
+            }
+            startActivity(intent)
+        }
+
+    }
+
+
 }
 
 
