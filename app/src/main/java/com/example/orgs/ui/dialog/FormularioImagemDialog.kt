@@ -1,7 +1,6 @@
 package com.example.orgs.ui.dialog
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.example.orgs.databinding.FormularioImagemBinding

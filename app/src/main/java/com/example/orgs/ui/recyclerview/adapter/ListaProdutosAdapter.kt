@@ -1,7 +1,6 @@
 package com.example.orgs.ui.recyclerview.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orgs.databinding.ProdutoItemBinding
@@ -20,14 +19,6 @@ class ListaProdutosAdapter : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoVi
                 produtoItemNome.text = produto.nome
                 produtoItemDescricao.text = produto.descricao
                 produtoItemValor.text = produto.valor.formatToBrazilianCurrency()
-
-                val visibilidade = if (produto.imagem != null) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-
-                imageView.visibility = visibilidade
                 imageView.tentaCarregarImagem(produto.imagem)
             }
         }

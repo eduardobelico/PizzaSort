@@ -13,7 +13,6 @@ class FormularioProdutoActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
-//        FormularioImagemBinding.inflate(layoutInflater)
     }
 
     private var url: String? = null
@@ -22,6 +21,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         configuraBotaoSalvar()
         setContentView(binding.root)
+        title = "Cadastrar Pizza"
         binding.activityFormularioProdutoImagem.setOnClickListener() {
             FormularioImagemDialog(this)
                 .showDialog(url) { imagem ->
