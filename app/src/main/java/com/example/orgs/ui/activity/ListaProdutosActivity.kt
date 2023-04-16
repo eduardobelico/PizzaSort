@@ -7,7 +7,6 @@ import com.example.orgs.dao.ProdutosDao
 import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
-
 class ListaProdutosActivity : AppCompatActivity() {
 
     private val dao = ProdutosDao()

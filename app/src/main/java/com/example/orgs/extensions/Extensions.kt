@@ -1,10 +1,8 @@
 package com.example.orgs.extensions
 
-import android.view.View
 import android.widget.ImageView
 import coil.load
 import com.example.orgs.R
-import com.example.orgs.model.Produto
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -16,35 +14,32 @@ fun BigDecimal.formatToBrazilianCurrency(): String {
     return formatter.format(this)
 }
 
-//fun Produto.tentaCarregarProduto() {
-//    intent.
-//}
-
-fun ImageView.tentaCarregarImagem(url: String? = null) {
-    if (url != null) {
-        visible()
+fun ImageView.tentaCarregarImagem(url: String? = null, fallback: Int = R.drawable.imagem_padrao) {
+//    if (url != null) {
+//        visible()
 
         load(url) {
-            fallback(R.drawable.erro)
+            fallback(fallback)
             error(R.drawable.erro)
             placeholder(R.drawable.placeholder)
             crossfade(1000)
         }
-    } else visibilityGone()
+//    } else visibilityGone()
 
 }
+// Outra possibilidade usando VISIBILITY!
 
-fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
-fun View.visible() {
-    visibility = View.VISIBLE
-}
-
-fun View.visibilityGone() {
-    visibility = View.GONE
-}
+//fun View.invisible() {
+//    visibility = View.INVISIBLE
+//}
+//
+//fun View.visible() {
+//    visibility = View.VISIBLE
+//}
+//
+//fun View.visibilityGone() {
+//    visibility = View.GONE
+//}
 
 
 
