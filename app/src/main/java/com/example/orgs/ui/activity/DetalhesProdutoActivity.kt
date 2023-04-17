@@ -1,7 +1,11 @@
 package com.example.orgs.ui.activity
 
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.example.orgs.R
 import com.example.orgs.databinding.ActivityDetalhesProdutoBinding
 import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.extensions.tentaCarregarImagem
@@ -17,6 +21,23 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         tentaCarregarProduto()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detalhes_produto, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_detalhes_produto_remover -> {
+
+            }
+            R.id.menu_detalhes_produto_editar -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun tentaCarregarProduto() {

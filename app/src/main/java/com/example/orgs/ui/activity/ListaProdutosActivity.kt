@@ -1,15 +1,20 @@
 package com.example.orgs.ui.activity
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuInflater
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
-    private val adapter = ListaProdutosAdapter()
+    private val adapter = ListaProdutosAdapter(context = this@ListaProdutosActivity)
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
@@ -32,7 +37,8 @@ class ListaProdutosActivity : AppCompatActivity() {
         val recyclerView = binding.activityListaProdutosRecyclerView
         recyclerView.adapter = adapter
         vaiParaDetalhesProduto()
-
+        adapter.clicarEmEditar
+        adapter.clicarEmRemover
     }
 
     private fun configuraFab() {
@@ -56,6 +62,8 @@ class ListaProdutosActivity : AppCompatActivity() {
         }
 
     }
+
+
 
 
 }

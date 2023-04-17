@@ -1,8 +1,13 @@
 package com.example.orgs.ui.recyclerview.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.example.orgs.R
 import com.example.orgs.databinding.ProdutoItemBinding
 import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.extensions.tentaCarregarImagem
@@ -10,12 +15,15 @@ import com.example.orgs.model.Produto
 
 //1 - Primeiro crio o meu adapter - é o adapter que dá acesso aos dados. É ele que cria objetos ViewHolder conforme necessário e também define os dados para essas visualizações.
 class ListaProdutosAdapter(
-    var clicarNoProduto: (produto: Produto) -> Unit = {}
+    val context: Context,
+    var clicarNoProduto: (produto: Produto) -> Unit = {},
+    var clicarEmEditar: (produto: Produto) -> Unit = {},
+    var clicarEmRemover: (produto: Produto) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ProdutoViewHolder>() {
 
     //2 - Imediatamente depois crio o ViewHolder!! Apenas depois de criado, adiciono as funções do onCreate, onBindView e getItemCount! É o viewHolder que dá funcionalidade aos itens da lista. Ele segura as informações da View.
     inner class ProdutoViewHolder(private val binding: ProdutoItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
         fun bindView(produto: Produto) {
             this.produto = produto
             with(binding) {
@@ -30,10 +38,36 @@ class ListaProdutosAdapter(
 
         init {
             itemView.setOnClickListener {
-                if (::produto.isInitialized){
+                if (::produto.isInitialized) {
                     clicarNoProduto(produto)
                 }
             }
+            itemView.setOnLongClickListener {
+                showPopup(it)
+                true
+            }
+        }
+
+        fun showPopup(v: View) {
+            PopupMenu(context, v).apply {
+                inflate(R.menu.menu_detalhes_produto)
+                setOnMenuItemClickListener(this@ProdutoViewHolder)
+                show()
+            }
+        }
+
+        override fun onMenuItemClick(item: MenuItem?): Boolean {
+            item?.let {
+                when (it.itemId) {
+                    R.id.menu_detalhes_produto_editar -> {
+                        clicarEmEditar(produto)
+                    }
+                    R.id.menu_detalhes_produto_remover -> {
+                        clicarEmRemover(produto)
+                    }
+                }
+            }
+            return true
         }
     }
 
