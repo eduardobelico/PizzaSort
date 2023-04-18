@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
+import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityDetalhesProdutoBinding
 import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.extensions.tentaCarregarImagem
@@ -13,7 +14,8 @@ import com.example.orgs.model.Produto
 
 class DetalhesProdutoActivity : AppCompatActivity() {
 
-    private val binding by lazy{
+    private lateinit var produto: Produto
+    private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
 
@@ -29,20 +31,26 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_detalhes_produto_remover -> {
+        if (::produto.isInitialized) {
+            val db = AppDatabase.instancia(this)
+            val produtoDao = db.produtoDao()
+            when (item.itemId) {
+                R.id.menu_detalhes_produto_remover -> {
+                    produtoDao.remove(produto)
+                    finish()
+                }
+                R.id.menu_detalhes_produto_editar -> {
 
-            }
-            R.id.menu_detalhes_produto_editar -> {
-
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun tentaCarregarProduto() {
-        intent.getParcelableExtra<Produto>(PRODUTO_CHAVE)?.let {
-            produtoCarregado -> preencheCampos(produtoCarregado)
+        intent.getParcelableExtra<Produto>(PRODUTO_CHAVE)?.let { produtoCarregado ->
+            produto = produtoCarregado
+            preencheCampos(produtoCarregado)
         } ?: finish()
     }
 
