@@ -1,5 +1,6 @@
 package com.example.orgs.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -40,7 +41,10 @@ class DetalhesProdutoActivity : AppCompatActivity() {
                     finish()
                 }
                 R.id.menu_detalhes_produto_editar -> {
-
+                    Intent(this, FormularioProdutoActivity::class.java).apply {
+                        putExtra(PRODUTO_CHAVE, produto)
+                        startActivity(this)
+                    }
                 }
             }
         }
