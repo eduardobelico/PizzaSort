@@ -2,9 +2,13 @@ package com.example.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
+import com.example.orgs.model.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
@@ -12,6 +16,9 @@ class ListaProdutosActivity : AppCompatActivity() {
     private val adapter = ListaProdutosAdapter(context = this@ListaProdutosActivity)
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
+    }
+    private val produtoDao by lazy {
+        AppDatabase.instancia(this).produtoDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +62,29 @@ class ListaProdutosActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val produtosOrdenados: List<Produto>? = when (item.itemId) {
+            R.id.menu_ordenar_produtos_nome_asc -> produtoDao.ordenarPorNomeAsc()
+            R.id.menu_ordenar_produtos_nome_desc -> produtoDao.ordenarPorNomeDesc()
+            R.id.menu_ordenar_produtos_descricao_asc -> produtoDao.ordenarPorDescricaoAsc()
+            R.id.menu_ordenar_produtos_descricao_desc -> produtoDao.ordenarPorDescricaoDesc()
+            R.id.menu_ordenar_produtos_valor_asc -> produtoDao.ordenarPorValorAsc()
+            R.id.menu_ordenar_produtos_valor_desc -> produtoDao.ordenarPorValorDesc()
+            R.id.menu_ordenar_produtos_sem_ordem -> produtoDao.buscaTodos()
+            else -> null
+        }
+        produtosOrdenados?.let {
+            adapter.setData(it)
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }
 

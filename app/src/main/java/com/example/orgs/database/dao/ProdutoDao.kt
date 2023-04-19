@@ -1,11 +1,6 @@
 package com.example.orgs.database.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.orgs.model.Produto
 
 @Dao
@@ -20,8 +15,24 @@ interface ProdutoDao {
     @Delete
     fun remove(produto: Produto)
 
-
     @Query("SELECT * FROM Produto WHERE id = :id")
     abstract fun buscaPorId(id: Long) : Produto?
 
+    @Query("SELECT * FROM Produto ORDER BY nome ASC")
+    fun ordenarPorNomeAsc(): List<Produto>
+
+    @Query("SELECT * FROM Produto ORDER BY nome DESC")
+    fun ordenarPorNomeDesc(): List<Produto>
+
+    @Query("SELECT * FROM Produto ORDER BY descricao ASC")
+    fun ordenarPorDescricaoAsc(): List<Produto>
+
+    @Query("SELECT * FROM Produto ORDER BY descricao DESC")
+    fun ordenarPorDescricaoDesc(): List<Produto>
+
+    @Query("SELECT * FROM Produto ORDER BY valor ASC")
+    fun ordenarPorValorAsc(): List<Produto>
+
+    @Query("SELECT * FROM Produto ORDER BY valor DESC")
+    fun ordenarPorValorDesc(): List<Produto>
 }
