@@ -51,14 +51,12 @@ class ListaProdutosActivity : AppCompatActivity() {
     private fun vaiParaDetalhesProduto() {
         adapter.clicarNoProduto = {
             val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
-                putExtra(PRODUTO_CHAVE, it)
+                putExtra(CHAVE_PRODUTO_ID, it.id)
             }
             startActivity(intent)
         }
 
     }
-
-
 
 
 }

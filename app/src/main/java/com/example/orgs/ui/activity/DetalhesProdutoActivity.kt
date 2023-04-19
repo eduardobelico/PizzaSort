@@ -14,7 +14,7 @@ import com.example.orgs.model.Produto
 
 class DetalhesProdutoActivity : AppCompatActivity() {
 
-    private var produtoId: Long? = null
+    private var produtoId: Long = 0L
     private var produto: Produto? = null
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
@@ -32,12 +32,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoId?.let { id ->
-            produto = produtoDao.buscaPorId(id)
-        }
-        produto?.let {
-            preencheCampos(it)
-        } ?: finish()
+        buscaProduto()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -46,27 +41,25 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.menu_detalhes_produto_remover -> {
-                    produto?.let {
-                        produtoDao.remove(it)
-                        finish()
-                    }
-                }
-                R.id.menu_detalhes_produto_editar -> {
-                    Intent(this, FormularioProdutoActivity::class.java).apply {
-                        putExtra(PRODUTO_CHAVE, produto)
-                        startActivity(this)
-                    }
+        when (item.itemId) {
+            R.id.menu_detalhes_produto_remover -> {
+                produto?.let {
+                    produtoDao.remove(it)
+                    finish()
                 }
             }
+            R.id.menu_detalhes_produto_editar -> {
+                Intent(this, FormularioProdutoActivity::class.java).apply {
+                    putExtra(CHAVE_PRODUTO_ID, produtoId)
+                    startActivity(this)
+                }
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 
     private fun tentaCarregarProduto() {
-        intent.getParcelableExtra<Produto>(PRODUTO_CHAVE)?.let { produtoCarregado ->
-            produtoId = produtoCarregado.id
-        } ?: finish()
+        produtoId = intent.getLongExtra(CHAVE_PRODUTO_ID, 0)
     }
 
     private fun preencheCampos(produtoCarregado: Produto) {
@@ -77,5 +70,13 @@ class DetalhesProdutoActivity : AppCompatActivity() {
             activityDetalhesProdutoValor.text = produtoCarregado.valor.formatToBrazilianCurrency()
         }
     }
+
+    private fun buscaProduto() {
+        produto = produtoDao.buscaPorId(produtoId)
+        produto?.let {
+            preencheCampos(it)
+        } ?: finish()
+    }
+
 
 }

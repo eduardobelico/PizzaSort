@@ -1,3 +1,3 @@
 package com.example.orgs.ui.activity
 
-const val PRODUTO_CHAVE = "produto"
+const val CHAVE_PRODUTO_ID: String = "PRODUTO_ID"
