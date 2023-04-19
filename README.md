@@ -1,5 +1,5 @@
 # PizzaSort
-<h1 align="center">Olá, o Orgs serviu apenas para fins de estudo com a Formação Android com Kotlin da Alura. Olá, eu sou Eduardo Bélico! </h1>
+<h1 align="center">Olá, o PizzaSort serviu apenas para fins de estudo com a Formação Android com Kotlin da Alura. Olá, eu sou Eduardo Bélico! </h1>
 
 📱 Técnicas, tecnologias e conceitos estudados 📱
 
