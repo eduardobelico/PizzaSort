@@ -2,8 +2,10 @@ package com.example.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
@@ -11,6 +13,7 @@ import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.model.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 class ListaProdutosActivity : AppCompatActivity() {
 
@@ -21,6 +24,7 @@ class ListaProdutosActivity : AppCompatActivity() {
     private val produtoDao by lazy {
         AppDatabase.instancia(this).produtoDao()
     }
+    private val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,66 +37,88 @@ class ListaProdutosActivity : AppCompatActivity() {
         super.onResume()
         val db = AppDatabase.instancia(this)
         val produtoDao = db.produtoDao()
+        val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            Toast.makeText(
+                this@ListaProdutosActivity,
+                "Ocorreu um problemão",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         val scope = MainScope()
-        scope.launch {
-            val produtos = withContext(Dispatchers.IO) {
+       scope.launch(job) {
+            repeat(1000) {
+                Log.i("MEW", "onResume: coroutine está em execução $it")
+                delay(1000)
+            }
+        }
+        scope.launch(handler) {
+            MainScope().launch(handler) {
+                throw Exception("hello")
+            }
+            throw IllegalArgumentException("oi")
+            val produtos = withContext(IO) {
                 produtoDao.buscaTodos()
             }
             adapter.setData(produtos)
         }
     }
 
-    private fun configuraRecyclerView() {
-        val recyclerView = binding.activityListaProdutosRecyclerView
-        recyclerView.adapter = adapter
-        vaiParaDetalhesProduto()
-        adapter.clicarEmEditar
-        adapter.clicarEmRemover
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
-    private fun configuraFab() {
-        val fab = binding.activityListaProdutosFab
-        fab.setOnClickListener {
-            vaiParaFormularioProduto()
+        private fun configuraRecyclerView() {
+            val recyclerView = binding.activityListaProdutosRecyclerView
+            recyclerView.adapter = adapter
+            vaiParaDetalhesProduto()
+            adapter.clicarEmEditar
+            adapter.clicarEmRemover
         }
-    }
 
-    private fun vaiParaFormularioProduto() {
-        val intent = Intent(this, FormularioProdutoActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun vaiParaDetalhesProduto() {
-        adapter.clicarNoProduto = {
-            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
-                putExtra(CHAVE_PRODUTO_ID, it.id)
+        private fun configuraFab() {
+            val fab = binding.activityListaProdutosFab
+            fab.setOnClickListener {
+                vaiParaFormularioProduto()
             }
+        }
+
+        private fun vaiParaFormularioProduto() {
+            val intent = Intent(this, FormularioProdutoActivity::class.java)
             startActivity(intent)
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val produtosOrdenados: List<Produto>? = when (item.itemId) {
-            R.id.menu_ordenar_produtos_nome_asc -> produtoDao.ordenarPorNomeAsc()
-            R.id.menu_ordenar_produtos_nome_desc -> produtoDao.ordenarPorNomeDesc()
-            R.id.menu_ordenar_produtos_descricao_asc -> produtoDao.ordenarPorDescricaoAsc()
-            R.id.menu_ordenar_produtos_descricao_desc -> produtoDao.ordenarPorDescricaoDesc()
-            R.id.menu_ordenar_produtos_valor_asc -> produtoDao.ordenarPorValorAsc()
-            R.id.menu_ordenar_produtos_valor_desc -> produtoDao.ordenarPorValorDesc()
-            R.id.menu_ordenar_produtos_sem_ordem -> produtoDao.buscaTodos()
-            else -> null
+        private fun vaiParaDetalhesProduto() {
+            adapter.clicarNoProduto = {
+                val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+                    putExtra(CHAVE_PRODUTO_ID, it.id)
+                }
+                startActivity(intent)
+            }
         }
-        produtosOrdenados?.let {
-            adapter.setData(it)
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
+        override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+            menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
+            return super.onCreateOptionsMenu(menu)
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            val produtosOrdenados: List<Produto>? = when (item.itemId) {
+                R.id.menu_ordenar_produtos_nome_asc -> produtoDao.ordenarPorNomeAsc()
+                R.id.menu_ordenar_produtos_nome_desc -> produtoDao.ordenarPorNomeDesc()
+                R.id.menu_ordenar_produtos_descricao_asc -> produtoDao.ordenarPorDescricaoAsc()
+                R.id.menu_ordenar_produtos_descricao_desc -> produtoDao.ordenarPorDescricaoDesc()
+                R.id.menu_ordenar_produtos_valor_asc -> produtoDao.ordenarPorValorAsc()
+                R.id.menu_ordenar_produtos_valor_desc -> produtoDao.ordenarPorValorDesc()
+                R.id.menu_ordenar_produtos_sem_ordem -> produtoDao.buscaTodos()
+                else -> null
+            }
+            produtosOrdenados?.let {
+                adapter.setData(it)
+            }
+            return super.onOptionsItemSelected(item)
+        }
 }
 
 
