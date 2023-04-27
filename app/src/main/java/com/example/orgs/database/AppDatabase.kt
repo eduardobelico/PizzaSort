@@ -25,18 +25,10 @@ abstract class AppDatabase : RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "PizzaSort.db"
-                ).allowMainThreadQueries()
+                )
                     .build().also {
                         db = it
                     }
             }
-//        fun instancia(context: Context) : AppDatabase {
-//            return Room.databaseBuilder(
-//                context,
-//                AppDatabase::class.java,
-//                "PizzaSort.db"
-//            ).allowMainThreadQueries()
-//                .build()
-//        }
     }
 }

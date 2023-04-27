@@ -10,6 +10,7 @@ import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.model.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.*
 
 class ListaProdutosActivity : AppCompatActivity() {
 
@@ -32,7 +33,13 @@ class ListaProdutosActivity : AppCompatActivity() {
         super.onResume()
         val db = AppDatabase.instancia(this)
         val produtoDao = db.produtoDao()
-        adapter.setData(produtoDao.buscaTodos())
+        val scope = MainScope()
+        scope.launch {
+            val produtos = withContext(Dispatchers.IO) {
+                produtoDao.buscaTodos()
+            }
+            adapter.setData(produtos)
+        }
     }
 
     private fun configuraRecyclerView() {
