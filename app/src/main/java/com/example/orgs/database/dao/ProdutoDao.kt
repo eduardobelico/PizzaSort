@@ -2,37 +2,38 @@ package com.example.orgs.database.dao
 
 import androidx.room.*
 import com.example.orgs.model.Produto
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProdutoDao {
 
     @Query("SELECT * FROM Produto")
-    fun buscaTodos(): List<Produto>
+    fun buscaTodos(): Flow<List<Produto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun salva(produto: Produto)
+    suspend fun salva(produto: Produto)
 
     @Delete
-    fun remove(produto: Produto)
+    suspend fun remove(produto: Produto)
 
     @Query("SELECT * FROM Produto WHERE id = :id")
-    abstract fun buscaPorId(id: Long) : Produto?
+    fun buscaPorId(id: Long) : Flow<Produto?>
 
     @Query("SELECT * FROM Produto ORDER BY nome ASC")
-    fun ordenarPorNomeAsc(): List<Produto>
+    fun ordenarPorNomeAsc(): Flow<List<Produto>>
 
     @Query("SELECT * FROM Produto ORDER BY nome DESC")
-    fun ordenarPorNomeDesc(): List<Produto>
+    fun ordenarPorNomeDesc(): Flow<List<Produto>>
 
     @Query("SELECT * FROM Produto ORDER BY descricao ASC")
-    fun ordenarPorDescricaoAsc(): List<Produto>
+    fun ordenarPorDescricaoAsc(): Flow<List<Produto>>
 
     @Query("SELECT * FROM Produto ORDER BY descricao DESC")
-    fun ordenarPorDescricaoDesc(): List<Produto>
+    fun ordenarPorDescricaoDesc(): Flow<List<Produto>>
 
     @Query("SELECT * FROM Produto ORDER BY valor ASC")
-    fun ordenarPorValorAsc(): List<Produto>
+    fun ordenarPorValorAsc(): Flow<List<Produto>>
 
     @Query("SELECT * FROM Produto ORDER BY valor DESC")
-    fun ordenarPorValorDesc(): List<Produto>
+    fun ordenarPorValorDesc(): Flow<List<Produto>>
 }

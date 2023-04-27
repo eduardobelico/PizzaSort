@@ -16,19 +16,20 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-         @Volatile
-            private lateinit var db: AppDatabase
+        @Volatile
+        private lateinit var db: AppDatabase
 
-            fun instancia(context: Context): AppDatabase {
-                if (::db.isInitialized) return db
-                return Room.databaseBuilder(
-                    context,
-                    AppDatabase::class.java,
-                    "PizzaSort.db"
-                )
-                    .build().also {
-                        db = it
-                    }
-            }
+        fun instancia(context: Context): AppDatabase {
+            if (::db.isInitialized) return db
+            return Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                "PizzaSort.db"
+            )
+                .build()
+                .also {
+                    db = it
+                }
+        }
     }
 }

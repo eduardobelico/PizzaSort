@@ -11,11 +11,9 @@ import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.model.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ListaProdutosActivity : AppCompatActivity() {
 
@@ -24,9 +22,6 @@ class ListaProdutosActivity : AppCompatActivity() {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
     private val produtoDao by lazy {
-        AppDatabase.instancia(this).produtoDao()
-    }
-    private val dao by lazy {
         val db = AppDatabase.instancia(this)
         db.produtoDao()
     }
@@ -36,23 +31,11 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-    }
-
-
-    override fun onResume() {
-        super.onResume()
         lifecycleScope.launch {
-            val produtos = buscaTodosProdutos()
-            adapter.setData(produtos)
+            produtoDao.buscaTodos().collect() { produtos ->
+                adapter.setData(produtos)
+            }
         }
-    }
-    // Conceito de Main Safe.
-    // Evitar que o app seja quebrado, logo usando o escopo que terá o seu vínculo de Dispatcher na Main Thread.
-    // pré-execução - apresentar um componente que indica o carregamento.
-    // pós-execução - pegar o resultado e fazer a atualização da main thread.
-    // A partir de uma suspend function se resolve a operação assíncerona internamente.
-    private suspend fun buscaTodosProdutos() = withContext(IO) {
-        dao.buscaTodos()
     }
 
     private fun configuraRecyclerView() {
@@ -90,20 +73,64 @@ class ListaProdutosActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val produtosOrdenados: List<Produto>? = when (item.itemId) {
-            R.id.menu_ordenar_produtos_nome_asc -> produtoDao.ordenarPorNomeAsc()
-            R.id.menu_ordenar_produtos_nome_desc -> produtoDao.ordenarPorNomeDesc()
-            R.id.menu_ordenar_produtos_descricao_asc -> produtoDao.ordenarPorDescricaoAsc()
-            R.id.menu_ordenar_produtos_descricao_desc -> produtoDao.ordenarPorDescricaoDesc()
-            R.id.menu_ordenar_produtos_valor_asc -> produtoDao.ordenarPorValorAsc()
-            R.id.menu_ordenar_produtos_valor_desc -> produtoDao.ordenarPorValorDesc()
-            R.id.menu_ordenar_produtos_sem_ordem -> produtoDao.buscaTodos()
-            else -> null
-        }
-        produtosOrdenados?.let {
-            adapter.setData(it)
-        }
+        setMenu(item)
         return super.onOptionsItemSelected(item)
+
+    }
+
+    private fun setMenu(item: MenuItem) {
+        when (item.itemId) {
+
+            R.id.menu_ordenar_produtos_nome_asc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorNomeAsc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_nome_desc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorNomeDesc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_descricao_asc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorDescricaoAsc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_descricao_desc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorDescricaoDesc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_valor_asc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorValorAsc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_valor_desc -> {
+                lifecycleScope.launch {
+                    produtoDao.ordenarPorValorDesc().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+            R.id.menu_ordenar_produtos_sem_ordem -> {
+                lifecycleScope.launch {
+                    produtoDao.buscaTodos().collect() {
+                        adapter.setData(it)
+                    }
+                }
+            }
+        }
     }
 }
 

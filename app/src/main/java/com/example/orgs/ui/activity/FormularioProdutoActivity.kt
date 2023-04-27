@@ -2,6 +2,7 @@ package com.example.orgs.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.extensions.tentaCarregarImagem
@@ -10,6 +11,7 @@ import com.example.orgs.ui.dialog.FormularioImagemDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -21,12 +23,12 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private val produtoDao by lazy {
-        AppDatabase.instancia(this).produtoDao()
+        val db = AppDatabase.instancia(this)
+        db.produtoDao()
     }
 
     private var url: String? = null
     private var produtoId = 0L
-    private val scope = CoroutineScope(IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +51,9 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private fun tentaBuscarProduto() {
-        scope.launch {
-            produtoDao.buscaPorId(produtoId)?.let {
-                withContext(Main) {
+        lifecycleScope.launch {
+            produtoDao.buscaPorId(produtoId).collect() { produto ->
+                produto?.let {
                     title = "Alterar Produto"
                     preencheCampos(it)
                 }
@@ -62,7 +64,6 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private fun tentaCarregarProduto() {
         produtoId = intent.getLongExtra(CHAVE_PRODUTO_ID, 0L)
     }
-
 
     private fun preencheCampos(produto: Produto) {
         url = produto.imagem
@@ -79,7 +80,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
 
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            scope.launch {
+            lifecycleScope.launch {
                 produtoDao.salva(produtoNovo)
                 finish()
             }

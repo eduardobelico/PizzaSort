@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityDetalhesProdutoBinding
@@ -14,6 +15,7 @@ import com.example.orgs.model.Produto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,7 +23,6 @@ class DetalhesProdutoActivity : AppCompatActivity() {
 
     private var produtoId: Long = 0L
     private var produto: Produto? = null
-    private val scope = CoroutineScope(IO)
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
@@ -49,7 +50,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_detalhes_produto_remover -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produto?.let {
                         produtoDao.remove(it)
                         finish()
@@ -80,9 +81,9 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     private fun buscaProduto() {
-        scope.launch {
-            produto = produtoDao.buscaPorId(produtoId)
-            withContext(Main) {
+        lifecycleScope.launch {
+            produtoDao.buscaPorId(produtoId).collect() { produtoEncontrado ->
+                produto = produtoEncontrado
                 produto?.let {
                     preencheCampos(it)
                 } ?: finish()
