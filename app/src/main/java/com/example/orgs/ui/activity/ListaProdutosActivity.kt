@@ -9,10 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
-import com.example.orgs.model.Produto
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppCompatActivity() {

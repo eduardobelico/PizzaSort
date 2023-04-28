@@ -1,5 +1,7 @@
 package com.example.orgs.extensions
 
+import android.content.Context
+import android.content.Intent
 import android.widget.ImageView
 import coil.load
 import com.example.orgs.R
@@ -14,16 +16,23 @@ fun BigDecimal.formatToBrazilianCurrency(): String {
     return formatter.format(this)
 }
 
+fun Context.vaiPara(clazz: Class<*>) {
+    Intent(this, clazz)
+        .apply {
+            startActivity(this)
+        }
+}
+
 fun ImageView.tentaCarregarImagem(url: String? = null, fallback: Int = R.drawable.imagem_padrao) {
 //    if (url != null) {
 //        visible()
 
-        load(url) {
-            fallback(fallback)
-            error(R.drawable.erro)
-            placeholder(R.drawable.placeholder)
-            crossfade(1000)
-        }
+    load(url) {
+        fallback(fallback)
+        error(R.drawable.erro)
+        placeholder(R.drawable.placeholder)
+        crossfade(1000)
+    }
 //    } else visibilityGone()
 
 }
