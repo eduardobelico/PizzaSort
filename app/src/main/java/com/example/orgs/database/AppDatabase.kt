@@ -8,9 +8,11 @@ import com.example.orgs.database.dao.UsuarioDao
 import com.example.orgs.model.Produto
 import com.example.orgs.model.Usuario
 
-@Database(entities = [Produto::class, Usuario::class], version = 2, autoMigrations = [
-    AutoMigration (from = 1, to = 2)
-])
+@Database(
+    entities = [Produto::class, Usuario::class], version = 2, autoMigrations = [
+        AutoMigration(from = 1, to = 2)], exportSchema = true
+)
+
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -28,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                "PizzaSort.db"
+                "pizzasort-db"
             )
                 .build()
                 .also {

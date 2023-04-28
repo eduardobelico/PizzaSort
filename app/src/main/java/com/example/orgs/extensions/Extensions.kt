@@ -16,9 +16,10 @@ fun BigDecimal.formatToBrazilianCurrency(): String {
     return formatter.format(this)
 }
 
-fun Context.vaiPara(clazz: Class<*>) {
+fun Context.vaiPara(clazz: Class<*>, intent: Intent.() -> Unit = {}) {
     Intent(this, clazz)
         .apply {
+            intent()
             startActivity(this)
         }
 }

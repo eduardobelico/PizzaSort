@@ -10,6 +10,7 @@ import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppCompatActivity() {
@@ -19,8 +20,10 @@ class ListaProdutosActivity : AppCompatActivity() {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
     private val produtoDao by lazy {
-        val db = AppDatabase.instancia(this)
-        db.produtoDao()
+        AppDatabase.instancia(this).produtoDao()
+    }
+    private val usuarioDao by lazy {
+        AppDatabase.instancia(this).usuarioDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +32,13 @@ class ListaProdutosActivity : AppCompatActivity() {
         configuraRecyclerView()
         configuraFab()
         lifecycleScope.launch {
-            produtoDao.buscaTodos().collect() { produtos ->
-                adapter.setData(produtos)
+            launch {
+                produtoDao.buscaTodos().collect() { produtos ->
+                    adapter.setData(produtos)
+                }
+            }
+            intent.getStringExtra("CHAVE_USUARIO_ID")?.let { usuarioId ->
+                usuarioDao.buscaUsuarioPorId(usuarioId).collect()
             }
         }
     }
