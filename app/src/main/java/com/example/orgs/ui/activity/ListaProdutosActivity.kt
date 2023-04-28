@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
+import com.example.orgs.extensions.vaiPara
 import com.example.orgs.preferences.dataStore
 import com.example.orgs.preferences.usuarioLogadoPreferences
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
@@ -39,14 +41,26 @@ class ListaProdutosActivity : AppCompatActivity() {
                     adapter.setData(produtos)
                 }
             }
-            dataStore.data.collect() { preferences ->
-                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
-                    usuarioDao.buscaUsuarioPorId(usuarioId).collect() {
-                        Log.i("ListaProdutos", "onCreate: $it")
-                    }
+            launch {
+                dataStore.data.collect() { preferences ->
+                    preferences[usuarioLogadoPreferences]?.let { usuarioId ->
+                        launch {
+                            usuarioDao.buscaUsuarioPorId(usuarioId).collect() {
+                                Log.i("ListaProdutos", "onCreate: $it")
+                            }
+                        }
+                    }?: vaiParaLogin()
                 }
             }
+//            launch {
+//                atualizaTela()
+//            }
         }
+    }
+
+    private fun vaiParaLogin() {
+        vaiPara(LoginActivity::class.java)
+        finish()
     }
 
     private fun configuraRecyclerView() {
@@ -78,19 +92,38 @@ class ListaProdutosActivity : AppCompatActivity() {
         }
     }
 
+    protected suspend fun deslogaUsuario() {
+        dataStore.edit { preferences ->
+            preferences.remove(usuarioLogadoPreferences)
+        }
+    }
+
+//    private suspend fun atualizaTela() {
+//        usuario.filterNotNull().collect { usuario ->
+//            produtoDao.buscaProdutosUsuario(usuario.id).collect {
+//                adapter.setData(it)
+//            }
+//        }
+//    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_ordenar_produtos, menu)
+        menuInflater.inflate(R.menu.menu_lista_produtos, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        setMenu(item)
+        setMenuOrganizar(item)
         return super.onOptionsItemSelected(item)
-
     }
 
-    private fun setMenu(item: MenuItem) {
+    private fun setMenuOrganizar(item: MenuItem) {
         when (item.itemId) {
+
+            R.id.menu_logout -> {
+                lifecycleScope.launch {
+                    deslogaUsuario()
+                }
+            }
 
             R.id.menu_ordenar_produtos_nome_asc -> {
                 lifecycleScope.launch {

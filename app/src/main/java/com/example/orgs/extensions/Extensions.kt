@@ -6,6 +6,7 @@ import android.widget.ImageView
 import coil.load
 import com.example.orgs.R
 import java.math.BigDecimal
+import java.security.MessageDigest
 import java.text.NumberFormat
 import java.util.*
 
@@ -22,6 +23,17 @@ fun Context.vaiPara(clazz: Class<*>, intent: Intent.() -> Unit = {}) {
             intent()
             startActivity(this)
         }
+}
+
+fun String.toHash(
+    algoritmo: String = "SHA-256"
+): String {
+    return MessageDigest
+        .getInstance(algoritmo)
+        .digest(this.toByteArray())
+        .fold("", { str, byte ->
+            str + "%02x".format(byte)
+        })
 }
 
 fun ImageView.tentaCarregarImagem(url: String? = null, fallback: Int = R.drawable.imagem_padrao) {

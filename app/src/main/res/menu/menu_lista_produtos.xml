@@ -32,4 +32,10 @@
 
         </menu>
     </item>
+
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_action_logout"
+        android:title="Logout App"
+        app:showAsAction="ifRoom"/>
 </menu>
