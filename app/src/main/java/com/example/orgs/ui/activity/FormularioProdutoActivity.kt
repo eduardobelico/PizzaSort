@@ -1,19 +1,17 @@
 package com.example.orgs.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityFormularioProdutoBinding
 import com.example.orgs.extensions.tentaCarregarImagem
 import com.example.orgs.model.Produto
+import com.example.orgs.preferences.dataStore
+import com.example.orgs.preferences.usuarioLogadoPreferences
 import com.example.orgs.ui.dialog.FormularioImagemDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -23,8 +21,11 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private val produtoDao by lazy {
-        val db = AppDatabase.instancia(this)
-        db.produtoDao()
+        AppDatabase.instancia(this).produtoDao()
+    }
+
+    private val usuarioDao by lazy {
+        AppDatabase.instancia(this).usuarioDao()
     }
 
     private var url: String? = null
@@ -43,6 +44,15 @@ class FormularioProdutoActivity : AppCompatActivity() {
                 }
         }
         tentaCarregarProduto()
+        lifecycleScope.launch {
+            dataStore.data.collect() { preferences ->
+                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
+                    usuarioDao.buscaUsuarioPorId(usuarioId).collect() {
+                        Log.i("FormularioProduto", "onCreate: $it")
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {

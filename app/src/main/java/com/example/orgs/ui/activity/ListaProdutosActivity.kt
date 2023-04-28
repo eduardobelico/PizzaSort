@@ -2,6 +2,7 @@ package com.example.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
+import com.example.orgs.preferences.dataStore
+import com.example.orgs.preferences.usuarioLogadoPreferences
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppCompatActivity() {
@@ -37,8 +39,12 @@ class ListaProdutosActivity : AppCompatActivity() {
                     adapter.setData(produtos)
                 }
             }
-            intent.getStringExtra("CHAVE_USUARIO_ID")?.let { usuarioId ->
-                usuarioDao.buscaUsuarioPorId(usuarioId).collect()
+            dataStore.data.collect() { preferences ->
+                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
+                    usuarioDao.buscaUsuarioPorId(usuarioId).collect() {
+                        Log.i("ListaProdutos", "onCreate: $it")
+                    }
+                }
             }
         }
     }

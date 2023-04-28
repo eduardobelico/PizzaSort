@@ -1,13 +1,15 @@
 package com.example.orgs.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityLoginBinding
 import com.example.orgs.extensions.vaiPara
+import com.example.orgs.preferences.dataStore
+import com.example.orgs.preferences.usuarioLogadoPreferences
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -33,8 +35,10 @@ class LoginActivity : AppCompatActivity() {
             val senha = binding.activityLoginSenha.text.toString()
             lifecycleScope.launch {
                 usuarioDao.autenticaUsuario(usuario, senha)?.let { usuario ->
+                    dataStore.edit { preferences ->
+                        preferences[usuarioLogadoPreferences] = usuario.id
+                    }
                     vaiPara(ListaProdutosActivity::class.java) {
-                        putExtra("CHAVE_USUARIO_ID", usuario.id)
                     }
                 } ?: Toast.makeText(this@LoginActivity, "Falha na autenticação", Toast.LENGTH_SHORT)
                     .show()

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FED453</color>
+    <color name="colorPrimary">#CD9137</color>
+    <color name="amarelo">#FED453</color>
     <color name="colorSecondary">#404040</color>
     <color name="colorPizza">#F1A48C</color>
     <color name="black">#FF000000</color>
