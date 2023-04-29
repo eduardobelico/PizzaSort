@@ -2,7 +2,6 @@ package com.example.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +14,12 @@ import com.example.orgs.extensions.vaiPara
 import com.example.orgs.preferences.dataStore
 import com.example.orgs.preferences.usuarioLogadoPreferences
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class ListaProdutosActivity : AppCompatActivity() {
+class ListaProdutosActivity : UsuarioBaseActivity() {
 
     private val adapter = ListaProdutosAdapter(context = this@ListaProdutosActivity)
     private val binding by lazy {
@@ -25,9 +27,6 @@ class ListaProdutosActivity : AppCompatActivity() {
     }
     private val produtoDao by lazy {
         AppDatabase.instancia(this).produtoDao()
-    }
-    private val usuarioDao by lazy {
-        AppDatabase.instancia(this).usuarioDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,30 +36,19 @@ class ListaProdutosActivity : AppCompatActivity() {
         configuraFab()
         lifecycleScope.launch {
             launch {
-                produtoDao.buscaTodos().collect() { produtos ->
-                    adapter.setData(produtos)
-                }
+                usuario
+                    .filterNotNull()
+                    .collect() {
+                        buscaProdutosUsuario()
+                    }
             }
-            launch {
-                dataStore.data.collect() { preferences ->
-                    preferences[usuarioLogadoPreferences]?.let { usuarioId ->
-                        launch {
-                            usuarioDao.buscaUsuarioPorId(usuarioId).collect() {
-                                Log.i("ListaProdutos", "onCreate: $it")
-                            }
-                        }
-                    }?: vaiParaLogin()
-                }
-            }
-//            launch {
-//                atualizaTela()
-//            }
         }
     }
 
-    private fun vaiParaLogin() {
-        vaiPara(LoginActivity::class.java)
-        finish()
+    private suspend fun buscaProdutosUsuario() {
+        produtoDao.buscaTodos().collect() { produtos ->
+            adapter.setData(produtos)
+        }
     }
 
     private fun configuraRecyclerView() {
@@ -69,6 +57,15 @@ class ListaProdutosActivity : AppCompatActivity() {
         vaiParaDetalhesProduto()
         adapter.clicarEmEditar
         adapter.clicarEmRemover
+    }
+
+    private fun vaiParaDetalhesProduto() {
+        adapter.clicarNoProduto = {
+            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+                putExtra(CHAVE_PRODUTO_ID, it.id)
+            }
+            startActivity(intent)
+        }
     }
 
     private fun configuraFab() {
@@ -83,40 +80,17 @@ class ListaProdutosActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun vaiParaDetalhesProduto() {
-        adapter.clicarNoProduto = {
-            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
-                putExtra(CHAVE_PRODUTO_ID, it.id)
-            }
-            startActivity(intent)
-        }
-    }
-
-    protected suspend fun deslogaUsuario() {
-        dataStore.edit { preferences ->
-            preferences.remove(usuarioLogadoPreferences)
-        }
-    }
-
-//    private suspend fun atualizaTela() {
-//        usuario.filterNotNull().collect { usuario ->
-//            produtoDao.buscaProdutosUsuario(usuario.id).collect {
-//                adapter.setData(it)
-//            }
-//        }
-//    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_lista_produtos, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        setMenuOrganizar(item)
+        setMenuLista(item)
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setMenuOrganizar(item: MenuItem) {
+    private fun setMenuLista(item: MenuItem) {
         when (item.itemId) {
 
             R.id.menu_logout -> {

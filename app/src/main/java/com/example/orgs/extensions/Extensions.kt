@@ -3,6 +3,7 @@ package com.example.orgs.extensions
 import android.content.Context
 import android.content.Intent
 import android.widget.ImageView
+import android.widget.Toast
 import coil.load
 import com.example.orgs.R
 import java.math.BigDecimal
@@ -23,6 +24,11 @@ fun Context.vaiPara(clazz: Class<*>, intent: Intent.() -> Unit = {}) {
             intent()
             startActivity(this)
         }
+}
+
+fun Context.toast(mensagem: String) {
+    Toast.makeText(this, mensagem, Toast.LENGTH_SHORT)
+        .show()
 }
 
 fun String.toHash(
