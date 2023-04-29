@@ -12,12 +12,7 @@ import com.example.orgs.databinding.ActivityDetalhesProdutoBinding
 import com.example.orgs.extensions.formatToBrazilianCurrency
 import com.example.orgs.extensions.tentaCarregarImagem
 import com.example.orgs.model.Produto
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DetalhesProdutoActivity : AppCompatActivity() {
 

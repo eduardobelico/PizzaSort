@@ -9,8 +9,16 @@ import com.example.orgs.model.Produto
 import com.example.orgs.model.Usuario
 
 @Database(
-    entities = [Produto::class, Usuario::class], version = 2, autoMigrations = [
-        AutoMigration(from = 1, to = 2)], exportSchema = true
+    entities = [Produto::class, Usuario::class], version = 3, autoMigrations = [
+        AutoMigration (
+            from = 1,
+            to = 2
+        ),
+        AutoMigration (
+            from = 2,
+            to = 3
+        )
+    ], exportSchema = true
 )
 
 @TypeConverters(Converters::class)
