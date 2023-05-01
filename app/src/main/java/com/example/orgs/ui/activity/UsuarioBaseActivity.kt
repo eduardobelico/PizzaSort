@@ -57,4 +57,6 @@ abstract class UsuarioBaseActivity : AppCompatActivity() {
             preferences.remove(usuarioLogadoPreferences)
         }
     }
+
+    protected fun usuarios() = usuarioDao.buscaTodosUsuarios()
 }
