@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.TodosProdutosActivity"/>
+
         <activity android:name=".ui.activity.FormularioProdutoActivity" />
 
         <activity android:name=".ui.activity.DetalhesProdutoActivity" />

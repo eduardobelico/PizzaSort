@@ -9,6 +9,9 @@
         app:showAsAction="ifRoom">
         <menu>
             <item
+                android:id="@+id/menu_ordenar_todos_produtos"
+                android:title="Todos os produtos"/>
+            <item
                 android:id="@+id/menu_ordenar_produtos_nome_asc"
                 android:title="Nome asc" />
             <item

@@ -8,13 +8,14 @@ import androidx.lifecycle.lifecycleScope
 import com.example.orgs.R
 import com.example.orgs.database.AppDatabase
 import com.example.orgs.databinding.ActivityListaProdutosBinding
+import com.example.orgs.extensions.vaiPara
 import com.example.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : UsuarioBaseActivity() {
 
-    private val adapter = ListaProdutosAdapter(context = this@ListaProdutosActivity)
+    private val adapter = ListaProdutosAdapter(context = this)
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
@@ -48,8 +49,6 @@ class ListaProdutosActivity : UsuarioBaseActivity() {
         val recyclerView = binding.activityListaProdutosRecyclerView
         recyclerView.adapter = adapter
         vaiParaDetalhesProduto()
-        adapter.clicarEmEditar
-        adapter.clicarEmRemover
     }
 
     private fun vaiParaDetalhesProduto() {
@@ -90,6 +89,10 @@ class ListaProdutosActivity : UsuarioBaseActivity() {
                 lifecycleScope.launch {
                     deslogaUsuario()
                 }
+            }
+
+            R.id.menu_ordenar_todos_produtos -> {
+                vaiPara(TodosProdutosActivity::class.java)
             }
 
             R.id.menu_ordenar_produtos_nome_asc -> {

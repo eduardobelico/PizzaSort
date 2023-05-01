@@ -22,6 +22,17 @@
             app:srcCompat="@drawable/imagem_padrao"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+        <AutoCompleteTextView
+            android:id="@+id/activity_formulario_usuario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activity_formulario_produto_imagem"
+            tools:text="@tools:sample/lorem[1]"
+            tools:visibility="visible"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/formulario_produto_nome_textImputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -30,7 +41,7 @@
             android:layout_margin="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_formulario_produto_imagem">
+            app:layout_constraintTop_toBottomOf="@+id/activity_formulario_usuario">
 
 
             <com.google.android.material.textfield.TextInputEditText
